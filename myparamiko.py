@@ -59,9 +59,8 @@ if __name__ == '__main__':
         # process output
         output_list = output.splitlines()
         output_list = output_list[11:-1]
-        # print(output_list)
         output = '\n'.join(output_list)
-        # creating the backup filename
+        # name the backup file
         from datetime import datetime
         now = datetime.now()
         year = now.year
