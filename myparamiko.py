@@ -22,7 +22,7 @@ def send_command(shell, command, timout=1):
     time.sleep(timout)
 
 # Show what is displaying on shell
-def show(shell, n=5000):
+def show_output(shell, n=5000):
     output = shell.recv(n)
     return output.decode()
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         myparamiko.send_command(shell, 'Example123')  # this is the enable command
         myparamiko.send_command(shell, 'show run')
 
-        output = myparamiko.show(shell)
+        output = myparamiko.show_output(shell)
 
         # process output
         output_list = output.splitlines()
