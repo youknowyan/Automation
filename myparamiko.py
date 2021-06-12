@@ -29,23 +29,54 @@ def show(shell, n=5000):
 # Close ssh client
 def close(ssh_client):
     if ssh_client.get_transport().is_active() == True:   # Check if ssh client is still live
-        print('Closing connection')
+        print('Now connection is closing')
         ssh_client.close()
+        print('Now connection is closed')
 
 ### below is for test purpose
-if __name__ == '__main__':
-    router_1 = {'server_IP': '10.1.6.20', 'server_PORT': '22', 'username':'user1', 'password':'Example123456'}
-    New_client = connect(**router_1)
-    shell = open_shell(New_client)
+if __name__ == '__main__': 
+      
+    # routers info:
+    router1 = {'server_IP':'10.1.6.10', 'server_PORT': '22', 'username': 'user1', 'password': 'Example123'}
+    router2 = {'server_IP':'10.1.6.11', 'server_PORT': '22', 'username': 'user1', 'password': 'Example123'}
+    router3 = {'server_IP':'10.1.6.12', 'server_PORT': '22', 'username': 'user1', 'password': 'Example123'}
 
-    send_command(shell, 'enable')
-    send_command(shell, '123') # this is the enable password
-    send_command(shell, 'term len 0')
-    send_command(shell, 'show version')
-    send_command(shell, 'show ip int brief')
+    # Add more server to the list if needed.
+    routers = [router1, router2, router3]
 
-    output = show(shell)
-    print(output)
+    # iterating all servers in the list and backup the config
+    for router in routers:
+        client = myparamiko.connect(**router)
+        shell = myparamiko.open_shell(client)
+
+        myparamiko.send_command(shell, 'terminal length 0')
+        myparamiko.send_command(shell, 'enable')
+        myparamiko.send_command(shell, 'Example123')  # this is the enable command
+        myparamiko.send_command(shell, 'show run')
+
+        output = myparamiko.show(shell)
+
+        # process output
+        output_list = output.splitlines()
+        output_list = output_list[11:-1]
+        # print(output_list)
+        output = '\n'.join(output_list)
+        # creating the backup filename
+        from datetime import datetime
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+        hour = now.hour
+        minute = now.minute
+        file_name = f'{router["server_ip"]}_{year}-{month}-{day}.txt'
+        print(file_name)
+
+        # Backup the file
+        with open(file_name, 'w') as f:
+            f.write(output)
+
+        myparamiko.close(client)
 
 
 
