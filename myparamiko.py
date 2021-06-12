@@ -34,7 +34,7 @@ def close(ssh_client):
 
 ### below is for test purpose
 if __name__ == '__main__':
-    router_1 = {'server_IP': '10.1.1.10', 'server_PORT': '22', 'username':'u1', 'password':'123'}
+    router_1 = {'server_IP': '10.1.6.20', 'server_PORT': '22', 'username':'user1', 'password':'Example123456'}
     New_client = connect(**router_1)
     shell = open_shell(New_client)
 
